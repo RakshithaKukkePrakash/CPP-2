@@ -25,10 +25,10 @@ std::string Humidity::toString() const
 std::shared_ptr<Humidity> Humidity::fromString(uint16_t timestamp,
 		std::string value)
 {
+	return std::make_shared<Humidity>(Humidity(timestamp, stof(value)));
 }
 
 Humidity::~Humidity()
 {
-	// TODO Auto-generated destructor stub
 }
 

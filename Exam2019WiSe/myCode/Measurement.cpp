@@ -69,8 +69,8 @@ void Measurement::parseLine(const std::string &line, uint16_t &timestamp,
 		timestamp = std::atol(line.substr(0,pos1).c_str());
 	}
 	int pos2 = line.find(":");
-	type = line.substr(pos1+1, pos2);
-	remainder = line.substr(pos2+1, std::string::npos);
+	type = line.substr(pos1+1, pos2-1);
+	remainder = line.substr(pos2+2);
 }
 
 
