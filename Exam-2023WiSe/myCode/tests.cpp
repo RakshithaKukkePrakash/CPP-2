@@ -83,17 +83,17 @@ void shopDbTests() {
 		shopDb.addShop(make_unique<Shop>(name));
 	}
 
-
-
-//	for(auto& shop: shopDb.shops()){
-//		for(auto itr = names.begin(); itr != names.end(); itr++){
-//			assertTrue(shop->getName() == *itr, "Name not present");
-//		}
-//	}
+	for(auto& shop: shopDb.shops()){
+			assertTrue(names.find(shop->getName()) != names.end(), "Name not present");
+	}
 
 	for(auto& shop: shopDb.shops()){
 		assertTrue(shop == shopDb.shopByName(shop->getName()), "Pointer incorrect");
+		names.erase(shop->getName());
 	}
+	assertTrue(names.empty() == true, "Items still in set");
+
+
 
 	/*
 	 * (2) Test LinearDiscount by creating an instance for 5% (0.05) and
