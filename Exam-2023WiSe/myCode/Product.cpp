@@ -29,6 +29,7 @@ Product& Product::setDiscount(std::shared_ptr<Discount> discount) {
 }
 
 float Product::priceFor(float quantity) const {
-	return ((this->basePrice * quantity) - this->discount);
+//	return ((this->basePrice * quantity) - this->discount.get());
+	return 0;
 }
 
