@@ -101,7 +101,15 @@ void shopDbTests() {
 	 * two that you get the expected result when invoking
 	 * LinearDiscount::discountFor with arguments 0, 10 and 100. (6 points)
 	 */
-	// TODO
+	FixedDiscount fixDisc1(0.05);
+	FixedDiscount fixDisc2(0.1);
+	assertTrue(fixDisc1.discountFor(0) == 0.05,"discount for 0");
+	assertTrue(fixDisc1.discountFor(10) == 0.05,"discount for 10");
+	assertTrue(fixDisc1.discountFor(100) == 0.05,"discount for 100");
+
+	assertTrue(fixDisc2.discountFor(0) == 0.1,"discount for 0");
+	assertTrue(fixDisc2.discountFor(10) == 0.1,"discount for 10");
+	assertTrue(fixDisc2.discountFor(100) == 0.1,"discount for 100");
 
 	/*
 	 * (3) Test QuantityDiscount by creating an instance for the
@@ -114,7 +122,21 @@ void shopDbTests() {
 	 * values for quantities 0, 9, 10, 11, 49, 50, 51, 99, 100 and 101.
 	 * (8 points)
 	 */
-	// TODO
+	QuantityDiscount qDisc;
+	qDisc.addLimit(10, 0.05);
+	qDisc.addLimit(50, 0.1);
+	qDisc.addLimit(100, 0.15);
+    assertTrue(qDisc.discountFor(0) == 0, "Incorrect assert for 0");
+    assertTrue(qDisc.discountFor(9) == 0, "Incorrect assert for 9");
+    assertTrue(qDisc.discountFor(10) == 0.05, "Incorrect assert for 10");
+    assertTrue(qDisc.discountFor(11) == 0.05, "Incorrect assert for 11");
+    assertTrue(qDisc.discountFor(49) == 0.05, "Incorrect assert for 49");
+    assertTrue(qDisc.discountFor(50) == 0.1, "Incorrect assert for 50");
+    assertTrue(qDisc.discountFor(51) == 0.1, "Incorrect assert for 51");
+    assertTrue(qDisc.discountFor(99) == 0.1, "Incorrect assert for 99");
+    assertTrue(qDisc.discountFor(100) == 0.15, "Incorrect assert for 100");
+    assertTrue(qDisc.discountFor(101) == 0.15, "Incorrect assert for 101");
+
 
 	/*
 	 * (4) Create a shop "Bakers4less" that sells bread at
@@ -123,7 +145,16 @@ void shopDbTests() {
 	 * invalid_argument exception (because they don't offer milk)
 	 * (5 points)
 	 */
-	// TODO
+    ShopDb shop;
+    shop.addShop(make_unique<Shop>("Bakers4less"));
+    shop.shopByName("Bakers4less")->setBasePrice("bread", 5.6);
+    try{
+    	shop.shopByName("Bakers4less")->setBasePrice("milk", 5);
+    }
+    catch(invalid_argument& e )
+    {
+    	assertTrue(std::string(e.what())== "Product not available at shop", "Incorrect exception message");
+    }
 }
 
 void evalTests() {
@@ -145,7 +176,31 @@ void evalTests() {
 	 *
 	 * (19 points)
 	 */
-	// TODO
+    ShopDb shop;
+    shop.addShop(make_unique<Shop>("Bakers4less"));
+    shop.shopByName("Bakers4less")->setBasePrice("bread", 5.6);
+    shop.addShop(make_unique<Shop>("Foodie1"));
+    shop.shopByName("Foodie1")->setBasePrice("Milk", 2.1);
+    shop.shopByName("Foodie1")->setBasePrice("Bread", 5.8);
+    shop.shopByName("Foodie1")->setBasePrice("Butter", 0.00996);
+
+	ShoppingList sList;
+	sList.addItem("milk", 2);
+	sList.addItem("butter", 250);
+	sList.addItem("bread", 1.5);
+
+    std::set<const Item*> notAvailable;
+
+    // Test for Foodie1
+    float costFoodie1 = shop.shopByName("Foodie1")->calculatePurchase(sList, notAvailable);
+    assertTrue(costFoodie1 == 15.39, "Incorrect cost for Foodie1");
+    assertTrue(notAvailable.empty(), "Some items are not available at Foodie1");
+
+    // Test for Bakers4less
+    float costBakers4less = shop.shopByName("Bakers4less")->calculatePurchase(sList, notAvailable);
+    assertTrue(costBakers4less == 8.40, "Incorrect cost for Bakers4less");
+    assertTrue(notAvailable.size() == 2, "Incorrect number of unavailable items at Bakers4less");
+
 }
 
 void allTests() {

@@ -71,8 +71,6 @@ float Shop::calculatePurchase(const ShoppingList& shoppingList,
 
 					}
 				}
-
-
 			}
 		}
 

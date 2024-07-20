@@ -9,7 +9,7 @@
 #define QUANTITYDISCOUNT_H_
 
 #include <map>
-
+#include <iostream>
 #include "Discount.h"
 
 /**
